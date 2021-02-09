@@ -5,12 +5,21 @@
   "main": "index.js",
   "scripts": {
     "sass": "sass --watch assets/sass/main.scss:assets/css/main.css",
-    "build": "sass assets/sass/main.scss:assets/css/main.css --style=compressed"
+    "sass-build": "sass assets/sass/main.scss:assets/css/main.css --style=compressed",
+    "build": "webpack --mode=production",
+    "dev": "webpack serve --watch --content-base public --hot"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "sass": "^1.26.10"
+    "sass": "^1.26.10",
+    "webpack": "^5.21.2",
+    "webpack-cli": "^4.5.0",
+    "webpack-dev-server": "^3.11.2"
+  },
+  "dependencies": {
+    "bundle-js": "^1.0.3",
+    "date-fns": "^2.17.0"
   }
 }
