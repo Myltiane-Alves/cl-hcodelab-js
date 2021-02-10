@@ -26,6 +26,7 @@ document.querySelectorAll(".calendar").forEach(calendar => {
 
     })
 
+    // aqui nesta parte será para renderizar a tela
     const render = () => {
 
         title.innerHTML = format(startMonth, "MMMM yyyy", {
