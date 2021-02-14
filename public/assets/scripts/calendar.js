@@ -1,12 +1,37 @@
-import { endOfMonth, endOfWeek, format, startOfWeek, startOfMonth } from "date-fns"
+import {addDays, addMonths, subMonths, differenceInSeconds, endOfMonth, endOfWeek, format, startOfWeek, startOfMonth } from "date-fns"
 import { ptBR } from "date-fns/locale"
+
+document.querySelectorAll("#schedules-new").forEach(page => {
+
+    const form = page.querySelector('form')
+    const input = page.querySelector('[name=schedules_at')
+    const button = form.querySelector('[type=submit]')
+
+    input.addEventListener('change', e => {
+
+        //button.disabled = !e.target.value
+        if(e.target.value) {
+            button.disabled = false;
+        } else {
+            button.disabled = true;
+        }
+    })
+
+    form.addEventListener('submit', e => {
+
+        if (!page.querySelector('[name=schedule_at]').value) {
+            button.disabled = true;
+            e.preventDefault();
+        }
+    })
+})
 
 document.querySelectorAll(".calendar").forEach(calendar => {
 
     const today = new Date();
-    const startMonth = startOfMonth(today);
-    const startAt = startOfWeek(startMonth);
-    const endAt = endOfWeek(endOfMonth(today));
+    let startMonth = startOfMonth(today);
+    let startAt = startOfWeek(startMonth);
+    let endAt = endOfWeek(endOfMonth(today));
 
     const title = calendar.querySelector("h2");
     const days = calendar.querySelector(".days");
@@ -16,23 +41,90 @@ document.querySelectorAll(".calendar").forEach(calendar => {
 
     btnToday.addEventListener("click", e => {
         
+        startMonth = startOfMonth(new Date())
+        startAt = startOfWeek(startMonth)
+        endAt = endOfWeek(endOfMonth(startMonth))
+        render();
+
     })
 
     btnPrev.addEventListener("click", e => {
 
+        startMonth = subMonths(startMonth, 1)
+        startAt = startOfWeek(startMonth)
+        endAt = endOfWeek(endOfMonth(startMonth))
+        render();
     })
 
     btnNext.addEventListener("click", e => {
 
+        startMonth = addMonths(startMonth, 1)
+        startAt = startOfWeek(startMonth)
+        endAt = endOfWeek(endOfMonth(startMonth))
+        render();
     })
 
     // aqui nesta parte será para renderizar a tela
     const render = () => {
 
-        title.innerHTML = format(startMonth, "MMMM yyyy", {
+        title.innerHTML = format(startMonth, "MMMM-yyyy", {
             locale: ptBR
         })
+        // aqui estou esvaziando o html do calendário
+        days.innerHTML = ""
 
+        let currentDay = new Date(startAt.getTime())
+
+        while(differenceInSeconds(endAt, currentDay) > 0) {
+
+            const li = document.createElement("li")
+
+            li.innerHTML = format(currentDay, "d" )
+            li.dataset.date = format(currentDay, "yyyy-MM-dd");
+
+            if (format(currentDay, "yyyyMMdd") < format(today, "yyyyMMdd")) {
+                li.classList.add('month-prev')
+                li.style.backgroundColor = "#DDD"
+                li.style.cursor = "no-drop";
+            } else {
+
+                if (format(currentDay, "yyyyMM") < format(startMonth, "yyyyMM")) {
+                    li.classList.add("month-prev")
+                } else if (format(currentDay, "yyyyMM") > format(startMonth, "yyyyMM")) {
+                    li.classList.add("month-next")
+                
+                } else if(format(currentDay, "yyyyMMdd") === format(startMonth, "yyyyMMdd")) {
+                    li.classList.add("active")
+                }   
+
+                li.addEventListener("click", e => {
+
+                    const {target} = e
+                    const selected = calendar.querySelector('.selected')
+
+                    
+                    if (selected) {
+
+                        selected.classList.remove("selected")
+                    }
+
+                    target.classList.add('selected')
+
+                    document.querySelector('[name=schedules_at').value = target.dataset.date
+
+                    const evt = document.createEvent("HTMLEvents")
+
+                    evt.initEvent("change", false, true)
+
+                    document.querySelector('[name=schedules_at').dispatchEvent(evt)
+                })
+            }    
+              
+            days.append(li);
+
+            currentDay = addDays(currentDay, 1)
+               
+        }
     }
 
     render();
