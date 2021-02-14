@@ -1,7 +1,6 @@
 {
   "name": "ferrari-2.0",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "sass": "sass --watch public/assets/sass/main.scss:public/assets/css/main.css",
@@ -20,5 +19,14 @@
   },
   "dependencies": {
     "date-fns": "^2.16.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Myltiane-Alves/jsdeveloper.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Myltiane-Alves/jsdeveloper/issues"
+  },
+  "homepage": "https://github.com/Myltiane-Alves/jsdeveloper#readme",
+  "description": ""
 }
